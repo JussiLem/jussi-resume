@@ -11,7 +11,8 @@ export const getUserMainData = async (emailAddress: string): Promise<MainDataFie
       email: emailAddress,
       name: 'Jussi',
       occupation: 'Full-stack developer',
-      description: 'My developer description',
+      description:
+        'My developer description. Use this to describe what you do or whatever you feel best describes yourself to a potential employer.',
       image: 'profilepic.jpg',
       bio: "Techs I like and what I'm comfortable ",
       contactmessage: 'How you should contact me',
@@ -21,7 +22,6 @@ export const getUserMainData = async (emailAddress: string): Promise<MainDataFie
       },
       website: 'https://jussilemmetyinen.me',
       resumedownload: 'https://jussilemmetyinen.me',
-      social: null,
     },
   }
 }

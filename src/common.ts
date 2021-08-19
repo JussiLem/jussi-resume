@@ -22,22 +22,21 @@ export interface SocialDataFields {
 }
 
 interface AddressFields {
-  city: string | null
+  city: string
   country: string
 }
 
 export interface UserFields {
   email: string
   name: string
-  occupation: string | null
-  description: string | null
-  image: string | null
-  bio: string | null
+  occupation: string
+  description: string
+  image: string
+  bio: string
   contactmessage: string
-  address: AddressFields | null
-  website: string | null
-  resumedownload: string | null
-  social: SocialFields[] | null
+  address: AddressFields
+  website: string
+  resumedownload: string
 }
 
 export interface MainDataFields {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import './App.scss'
+import './components/layout.scss'
+import './components/defaults.scss'
 import { getUserMainData } from './mock-data'
 import { MainDataFields } from './common'
 import ErrorFallback from './components/ErrorFallback'
@@ -22,7 +23,7 @@ const App = () => {
 
   return (
     <ErrorFallback>
-      <div className="App">{mainData && <Header email={mainData.user.email} />}</div>
+      <div className="App">{mainData && <Header user={mainData.user} />}</div>
     </ErrorFallback>
   )
 }

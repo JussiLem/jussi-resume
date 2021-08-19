@@ -1,6 +1,4 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffect, useState } from 'react'
-import './layout.scss'
+import React, { useEffect, useState } from 'react'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   fab,
@@ -9,22 +7,24 @@ import {
   faTwitter,
   faGithub,
 } from '@fortawesome/free-brands-svg-icons'
-import { SocialFields } from '../common'
+import { SocialFields, UserFields } from '../common'
 import { getUserSocialMediaData } from '../mock-data'
+import Banner from './Banner'
 
 library.add(fab, faFacebook, faLinkedin, faTwitter, faGithub)
 
 interface HeaderDetails {
-  email: string
+  user: UserFields
 }
-const Header = ({ email }: HeaderDetails) => {
+
+const Header = ({ user }: HeaderDetails) => {
   const [socialMedias, setSocialMedias] = useState<SocialFields[]>([])
   useEffect(() => {
     const handleStatusChange = () => {
-      getUserSocialMediaData(email).then(socials => setSocialMedias(socials.social))
+      getUserSocialMediaData(user.email).then(socials => setSocialMedias(socials.social))
     }
     handleStatusChange()
-  }, [email])
+  }, [user.email])
 
   return (
     <header id="home">
@@ -42,16 +42,41 @@ const Header = ({ email }: HeaderDetails) => {
               Home
             </a>
           </li>
-          {socialMedias.map(socialMedia => {
-            return (
-              <li key={`${socialMedia.name}`}>
-                <FontAwesomeIcon icon={['fab', socialMedia.className]} color="#A8A8A8" />
-                <a href={socialMedia.url}>{socialMedia.name}</a>
-              </li>
-            )
-          })}
+          <li>
+            <a className="smoothscroll" href="#about">
+              About
+            </a>
+          </li>
+          <li>
+            <a className="smoothscroll" href="#resume">
+              Resume
+            </a>
+          </li>
+          <li>
+            <a className="smoothscroll" href="#portfolio">
+              Works
+            </a>
+          </li>
+          <li>
+            <a className="smoothscroll" href="#testimonials">
+              Testimonials
+            </a>
+          </li>
+          <li>
+            <a className="smoothscroll" href="#contact">
+              Contact
+            </a>
+          </li>
         </ul>
       </nav>
+
+      <Banner
+        city={user.address.city}
+        name={user.name}
+        description={user.description}
+        occupation={user.occupation}
+        socialMedias={socialMedias}
+      />
     </header>
   )
 }
