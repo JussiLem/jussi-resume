@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   fab,
@@ -7,8 +7,7 @@ import {
   faTwitter,
   faGithub,
 } from '@fortawesome/free-brands-svg-icons'
-import { SocialFields, UserFields } from '../common'
-import { getUserSocialMediaData } from '../mock-data'
+import { UserFields } from '../common'
 import Banner from './Banner'
 
 library.add(fab, faFacebook, faLinkedin, faTwitter, faGithub)
@@ -18,14 +17,6 @@ interface HeaderDetails {
 }
 
 const Header = ({ user }: HeaderDetails) => {
-  const [socialMedias, setSocialMedias] = useState<SocialFields[]>([])
-  useEffect(() => {
-    const handleStatusChange = () => {
-      getUserSocialMediaData(user.email).then(socials => setSocialMedias(socials.social))
-    }
-    handleStatusChange()
-  }, [user.email])
-
   return (
     <header id="home">
       <nav id="nav-wrap">
@@ -70,13 +61,7 @@ const Header = ({ user }: HeaderDetails) => {
         </ul>
       </nav>
 
-      <Banner
-        city={user.address.city}
-        name={user.name}
-        description={user.description}
-        occupation={user.occupation}
-        socialMedias={socialMedias}
-      />
+      <Banner user={user} />
     </header>
   )
 }

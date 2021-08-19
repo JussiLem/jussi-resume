@@ -1,16 +1,14 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { SocialFields } from '../common'
+import { UserFields } from '../common'
+import SocialMedia from './SocialMedia'
 
 interface BannerProps {
-  name: string
-  city: string
-  occupation: string
-  description: string
-  socialMedias: SocialFields[]
+  user: UserFields
 }
 
-const Banner = ({ name, city, occupation, description, socialMedias }: BannerProps) => {
+const Banner = ({ user }: BannerProps) => {
+  const { occupation, description, address, name } = user
+  const { city } = address
   return (
     <div className="row banner">
       <div className="banner-text">
@@ -19,17 +17,7 @@ const Banner = ({ name, city, occupation, description, socialMedias }: BannerPro
           I&rsquo;m a {city} based <span>{occupation}</span>. {description}.
         </h3>
         <hr />
-        <ul className="social">
-          {socialMedias.map(socialMedia => {
-            return (
-              <li key={`${socialMedia.name}`}>
-                <a href={socialMedia.url} aria-label={socialMedia.name}>
-                  <FontAwesomeIcon icon={['fab', socialMedia.className]} color="#A8A8A8" />
-                </a>
-              </li>
-            )
-          })}
-        </ul>
+        <SocialMedia user={user} />
       </div>
     </div>
   )

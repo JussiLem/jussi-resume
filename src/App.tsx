@@ -5,6 +5,7 @@ import { getUserMainData } from './mock-data'
 import { MainDataFields } from './common'
 import ErrorFallback from './components/ErrorFallback'
 import Header from './components/Header'
+import Footer from './components/Footer'
 
 const App = () => {
   const [mainData, setMainData] = useState<MainDataFields | null>(null)
@@ -23,7 +24,14 @@ const App = () => {
 
   return (
     <ErrorFallback>
-      <div className="App">{mainData && <Header user={mainData.user} />}</div>
+      <div className="App">
+        {mainData && (
+          <div>
+            <Header user={mainData.user} />
+            <Footer user={mainData.user} />
+          </div>
+        )}
+      </div>
     </ErrorFallback>
   )
 }
