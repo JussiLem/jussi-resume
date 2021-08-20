@@ -6,6 +6,7 @@ import { MainDataFields } from './common'
 import ErrorFallback from './components/ErrorFallback'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import About from './components/About'
 
 const App = () => {
   const [mainData, setMainData] = useState<MainDataFields | null>(null)
@@ -26,10 +27,11 @@ const App = () => {
     <ErrorFallback>
       <div className="App">
         {mainData && (
-          <div>
+          <>
             <Header user={mainData.user} />
+            <About user={mainData.user} />
             <Footer user={mainData.user} />
-          </div>
+          </>
         )}
       </div>
     </ErrorFallback>

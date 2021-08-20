@@ -37,6 +37,7 @@ export interface UserFields {
   address: AddressFields
   website: string
   resumedownload: string
+  phone?: string
 }
 
 export interface MainDataFields {
