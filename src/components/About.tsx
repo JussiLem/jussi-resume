@@ -1,15 +1,28 @@
+import { SyntheticEvent } from 'react'
 import { UserFields } from '../common'
 
 interface AboutProps {
   user: UserFields
 }
 const About = ({ user }: AboutProps) => {
-  const profilepic = `images/${user.image}`
+  /* eslint-disable no-param-reassign */
+  const imageOnErrorHandler = (event: SyntheticEvent<HTMLImageElement, Event>) => {
+    event.currentTarget.src = ''
+    event.currentTarget.className = 'error'
+  }
+
   return (
     <section id="about">
       <div className="row">
         <div className="three columns">
-          <img className="profile-pic" src={profilepic} alt="Jussi Lemmetyinen Profile Pic" />
+          {user.image === '' ? null : (
+            <img
+              className="profile-pic"
+              src={user.image}
+              onError={event => imageOnErrorHandler(event)}
+              alt="Jussi Lemmetyinen Profile Pic"
+            />
+          )}
         </div>
         <div className="nine columns main-col">
           <h2>About Me</h2>

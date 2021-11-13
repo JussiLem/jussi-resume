@@ -31,7 +31,7 @@ export interface UserFields {
   name: string
   occupation: string
   description: string
-  image: string
+  image?: string
   bio: string
   contactmessage: string
   address: AddressFields
