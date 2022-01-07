@@ -80,18 +80,24 @@ export const getResumeData = async (userId: string): Promise<ResumeDataFields> =
       skillmessage: 'Create a short write-up of skills to show off to employers',
       educationHistory: [
         {
-          school: 'University',
+          school: 'Beer University',
           degree: 'Masters in Beer tasting',
-          graduated: '2018',
+          graduated: '2014',
           description:
             'Describe your experience at school, what you learned, what useful skills you have acquired etc.',
         },
         {
-          school: 'University 2',
+          school: 'Haaga-Helia University',
           degree: 'haaga-helia bachelor thingy',
           graduated: '2021',
           description:
             'Describe your experience at school, what you learned, what useful skills you have acquired etc.',
+        },
+        {
+          school: 'High School',
+          degree: '',
+          graduated: '2018',
+          description: 'Lots of high schooling',
         },
       ],
       workHistory: [

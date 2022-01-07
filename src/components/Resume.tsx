@@ -2,9 +2,32 @@ import { useEffect, useState } from 'react'
 import { EducationFields, SkillSetFields, UserFields, WorkFields } from '../common'
 import { getResumeData } from '../mock-data'
 
+const educationHistoryHandler = (educationFields?: EducationFields[]) => {
+  return educationFields
+    ? educationFields.sort((a, b) => {
+        return Number(b.graduated) - Number(a.graduated)
+      })
+    : null
+}
+
+const handleResumeData = async (email: string) => {
+  const resumeData = await getResumeData(email)
+  const receivedWorkHistory = resumeData.resume.workHistory || null
+  const receivedEducationHistory = educationHistoryHandler(resumeData.resume.educationHistory)
+  const receivedSkillMessage = resumeData.resume.skillmessage || null
+  const receivedSkillSet = resumeData.resume.skillSet || null
+  return {
+    receivedWorkHistory,
+    receivedEducationHistory,
+    receivedSkillMessage,
+    receivedSkillSet,
+  }
+}
+
 interface ResumeProps {
   user: UserFields
 }
+
 const Resume = ({ user }: ResumeProps) => {
   const [educationHistory, setEducationHistory] = useState<EducationFields[] | null>([])
   const [workHistory, setWorkHistory] = useState<WorkFields[] | null>([])
@@ -12,11 +35,12 @@ const Resume = ({ user }: ResumeProps) => {
   const [skillMessage, setSkillMessage] = useState<string | null>('')
   useEffect(() => {
     const handleStatusChange = async () => {
-      const resumeData = await getResumeData(user.email)
-      const receivedWorkHistory = resumeData.resume.workHistory || null
-      const receivedEducationHistory = resumeData.resume.educationHistory || null
-      const receivedSkillMessage = resumeData.resume.skillmessage || null
-      const receivedSkillSet = resumeData.resume.skillSet || null
+      const {
+        receivedWorkHistory,
+        receivedEducationHistory,
+        receivedSkillSet,
+        receivedSkillMessage,
+      } = await handleResumeData(user.email)
       setEducationHistory(receivedEducationHistory)
       setWorkHistory(receivedWorkHistory)
       setSkillMessage(receivedSkillMessage)
