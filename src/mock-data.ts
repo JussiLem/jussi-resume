@@ -68,7 +68,7 @@ export const getUserSocialMediaData = async (userId: string): Promise<SocialData
   }
 }
 
-export const getResumeData = async (): Promise<ResumeDataFields> => {
+export const getResumeData = async (userId: string): Promise<ResumeDataFields> => {
   setTimeout(() => '', 1000)
   return {
     response: {
@@ -76,25 +76,25 @@ export const getResumeData = async (): Promise<ResumeDataFields> => {
       errorMessage: null,
     },
     resume: {
-      resumeId: 'Jussi-1234-resume',
+      resumeId: `${userId}-resume`,
       skillmessage: 'Create a short write-up of skills to show off to employers',
-      education: [
+      educationHistory: [
         {
           school: 'University',
           degree: 'Masters in Beer tasting',
-          graduated: 'April 2018',
+          graduated: '2018',
           description:
             'Describe your experience at school, what you learned, what useful skills you have acquired etc.',
         },
         {
           school: 'University 2',
           degree: 'haaga-helia bachelor thingy',
-          graduated: 'April 2020',
+          graduated: '2021',
           description:
             'Describe your experience at school, what you learned, what useful skills you have acquired etc.',
         },
       ],
-      work: [
+      workHistory: [
         {
           company: 'Siili',
           title: 'Consultant',
@@ -102,37 +102,45 @@ export const getResumeData = async (): Promise<ResumeDataFields> => {
           description: 'Hello',
         },
         {
-          company: 'Svea',
+          company: 'Svea Ekonomi',
           title: 'Software Developer',
           years: 'April 2018 - June 2019',
-          description: 'Hello',
+          description: 'Developed some Java stuff.',
         },
       ],
-      skills: [
+      skillSet: [
         {
           name: 'Git',
           level: '90%',
         },
         {
           name: 'React',
-          level: '65%',
+          level: '75%',
         },
         {
           name: 'AWS',
           level: '95%',
         },
+        {
+          name: 'TypeScript',
+          level: '93%',
+        },
+        {
+          name: 'Java',
+          level: '85%',
+        },
       ],
       certifications: [
         {
-          name: 'AWS associate architect',
+          name: 'AWS Associate Architect',
           date: '08/2020',
         },
         {
-          name: 'AWS associate sysops',
+          name: 'AWS Associate SysOps',
           date: '05/2021',
         },
         {
-          name: 'AWS associate developer',
+          name: 'AWS associate Developer',
           date: '08/2021',
         },
       ],

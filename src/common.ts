@@ -45,21 +45,21 @@ export interface MainDataFields {
   response: ResponseDetails
 }
 
-interface EducationFields {
+export interface EducationFields {
   school: string
   degree: string
   graduated: string
-  description: string
+  description?: string
 }
 
-interface WorkFields {
+export interface WorkFields {
   company: string
   title: string
   years: string
   description: string
 }
 
-interface SkillFields {
+export interface SkillSetFields {
   name: string
   level: string
 }
@@ -75,12 +75,12 @@ export interface ResumeUserMapper {
 }
 
 export interface ResumeFields {
-  resumeId: string
-  skillmessage: string
-  education: EducationFields[]
-  work: WorkFields[]
-  skills: SkillFields[]
-  certifications: CertificationFields[]
+  resumeId?: string
+  skillmessage?: string
+  educationHistory?: EducationFields[]
+  workHistory?: WorkFields[]
+  skillSet?: SkillSetFields[]
+  certifications?: CertificationFields[]
 }
 
 export interface ResumeDataFields {
