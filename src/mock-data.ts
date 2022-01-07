@@ -82,21 +82,28 @@ export const getResumeData = async (userId: string): Promise<ResumeDataFields> =
         {
           school: 'Beer University',
           degree: 'Masters in Beer tasting',
-          graduated: '2014',
+          graduated: {
+            year: 2014,
+          },
           description:
             'Describe your experience at school, what you learned, what useful skills you have acquired etc.',
         },
         {
           school: 'Haaga-Helia University',
           degree: 'haaga-helia bachelor thingy',
-          graduated: '2021',
+          graduated: {
+            year: 2021,
+            month: 'April',
+          },
           description:
             'Describe your experience at school, what you learned, what useful skills you have acquired etc.',
         },
         {
           school: 'High School',
-          degree: '',
-          graduated: '2018',
+          degree: 'School degree',
+          graduated: {
+            year: 2018,
+          },
           description: 'Lots of high schooling',
         },
       ],

@@ -48,7 +48,10 @@ export interface MainDataFields {
 export interface EducationFields {
   school: string
   degree: string
-  graduated: string
+  graduated: {
+    year: number
+    month?: string
+  }
   description?: string
 }
 

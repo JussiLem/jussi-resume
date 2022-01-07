@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import { EducationFields, SkillSetFields, UserFields, WorkFields } from '../common'
 import { getResumeData } from '../mock-data'
 
+const capitalizeFirstLetter = (cap: string) => cap.charAt(0).toUpperCase() + cap.slice(1)
 const educationHistoryHandler = (educationFields?: EducationFields[]) => {
   return educationFields
     ? educationFields.sort((a, b) => {
-        return Number(b.graduated) - Number(a.graduated)
+        return Number(b.graduated.year) - Number(a.graduated.year)
       })
     : null
 }
@@ -67,7 +68,17 @@ const Resume = ({ user }: ResumeProps) => {
                       <h3>{education.school}</h3>
                       <p className="info">
                         {education.degree} <span>&bull;</span>
-                        <em className="date">{education.graduated}</em>
+                        <em className="date">{education.graduated.year}</em>
+                        {education.graduated.month ? (
+                          <>
+                            <span>&bull;</span>
+                            <em className="month">
+                              {capitalizeFirstLetter(education.graduated.month)}
+                            </em>
+                          </>
+                        ) : (
+                          <></>
+                        )}
                       </p>
                       <p>{education.description}</p>
                     </div>
