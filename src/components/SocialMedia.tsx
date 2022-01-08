@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { SocialFields, UserFields } from '../common'
+import { SocialFields } from '../common'
 import { getUserSocialMediaData } from '../mock-data'
 
 interface SocialMediaProps {
-  user: UserFields
+  userId: string
 }
-const SocialMedia = ({ user }: SocialMediaProps) => {
+const SocialMedia = ({ userId }: SocialMediaProps) => {
   const [socialMedias, setSocialMedias] = useState<SocialFields[]>([])
   useEffect(() => {
     const handleStatusChange = () => {
-      getUserSocialMediaData(user.email).then(socials => setSocialMedias(socials.social))
+      getUserSocialMediaData(userId).then(socials => setSocialMedias(socials.social))
     }
     handleStatusChange()
-  }, [user.email])
+  }, [userId])
 
   return (
     <ul className="social">

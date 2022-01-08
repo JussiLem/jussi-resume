@@ -18,6 +18,7 @@ export interface SocialFields {
 
 export interface SocialDataFields {
   social: SocialFields[]
+  userId: string
   response: ResponseDetails
 }
 
@@ -27,21 +28,31 @@ interface AddressFields {
 }
 
 export interface UserFields {
-  email: string
-  name: string
-  occupation: string
-  description: string
+  userId: string
+  email?: string
+  name?: string
+  occupation?: string
+  description?: string
   image?: string
-  bio: string
-  contactmessage: string
-  address: AddressFields
-  website: string
-  resumedownload: string
+  bio?: string
+  contactmessage?: string
+  address?: AddressFields
+  website?: string
+  resumedownload?: string
   phone?: string
 }
 
-export interface MainDataFields {
+export interface UserBasicData {
+  email: string
+  userId: string
+}
+
+export interface UserDataFields {
   user: UserFields
+  response: ResponseDetails
+}
+export interface MainDataFields {
+  user: UserBasicData | null
   response: ResponseDetails
 }
 
@@ -88,5 +99,6 @@ export interface ResumeFields {
 
 export interface ResumeDataFields {
   resume: ResumeFields
+  userId: string
   response: ResponseDetails
 }

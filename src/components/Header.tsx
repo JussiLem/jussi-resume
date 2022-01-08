@@ -7,16 +7,15 @@ import {
   faTwitter,
   faGithub,
 } from '@fortawesome/free-brands-svg-icons'
-import { UserFields } from '../common'
 import Banner from './Banner'
 
 library.add(fab, faFacebook, faLinkedin, faTwitter, faGithub)
 
 interface HeaderDetails {
-  user: UserFields
+  userId: string
 }
 
-const Header = ({ user }: HeaderDetails) => {
+const Header = ({ userId }: HeaderDetails) => {
   return (
     <header id="home">
       <nav id="nav-wrap">
@@ -61,7 +60,7 @@ const Header = ({ user }: HeaderDetails) => {
         </ul>
       </nav>
 
-      <Banner user={user} />
+      {userId ? <Banner userId={userId} /> : <></>}
     </header>
   )
 }

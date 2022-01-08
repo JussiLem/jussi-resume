@@ -1,19 +1,22 @@
 import React from 'react'
-import { UserFields } from '../common'
 import SocialMedia from './SocialMedia'
 
 interface FooterDetails {
-  user: UserFields
+  userId: string
 }
 
-const Footer = ({ user }: FooterDetails) => {
+const Footer = ({ userId }: FooterDetails) => {
   return (
     <footer>
       <div className="row">
         <div className="twelve columns">
-          <ul className="social-links">
-            <SocialMedia user={user} />
-          </ul>
+          {userId ? (
+            <ul className="social-links">
+              <SocialMedia userId={userId} />
+            </ul>
+          ) : (
+            <></>
+          )}
 
           <ul className="copyright">
             <li>&copy; Copyright 2021 Jussi Lemmetyinen</li>

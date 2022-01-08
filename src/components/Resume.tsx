@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { EducationFields, SkillSetFields, UserFields, WorkFields } from '../common'
+import { Suspense, useEffect, useState } from 'react'
+import { EducationFields, SkillSetFields, WorkFields } from '../common'
 import { getResumeData } from '../mock-data'
 
 const capitalizeFirstLetter = (cap: string) => cap.charAt(0).toUpperCase() + cap.slice(1)
@@ -11,133 +11,140 @@ const educationHistoryHandler = (educationFields?: EducationFields[]) => {
     : null
 }
 
-const handleResumeData = async (email: string) => {
-  const resumeData = await getResumeData(email)
-  const receivedWorkHistory = resumeData.resume.workHistory || null
-  const receivedEducationHistory = educationHistoryHandler(resumeData.resume.educationHistory)
-  const receivedSkillMessage = resumeData.resume.skillmessage || null
-  const receivedSkillSet = resumeData.resume.skillSet || null
-  return {
-    receivedWorkHistory,
-    receivedEducationHistory,
-    receivedSkillMessage,
-    receivedSkillSet,
+const handleResumeData = async (email?: string) => {
+  if (email) {
+    const resumeData = await getResumeData(email)
+    if (resumeData.response.httpCode === 200) {
+      const receivedWorkHistory = resumeData.resume.workHistory || null
+      const receivedEducationHistory = educationHistoryHandler(resumeData.resume.educationHistory)
+      const receivedSkillMessage = resumeData.resume.skillmessage || null
+      const receivedSkillSet = resumeData.resume.skillSet || null
+      return {
+        receivedWorkHistory,
+        receivedEducationHistory,
+        receivedSkillMessage,
+        receivedSkillSet,
+      }
+    }
+    return null
   }
+  return null
 }
 
 interface ResumeProps {
-  user: UserFields
+  userId: string
 }
 
-const Resume = ({ user }: ResumeProps) => {
+const Resume = ({ userId }: ResumeProps) => {
   const [educationHistory, setEducationHistory] = useState<EducationFields[] | null>([])
   const [workHistory, setWorkHistory] = useState<WorkFields[] | null>([])
   const [skillSet, setSkillSet] = useState<SkillSetFields[] | null>([])
   const [skillMessage, setSkillMessage] = useState<string | null>('')
   useEffect(() => {
     const handleStatusChange = async () => {
-      const {
-        receivedWorkHistory,
-        receivedEducationHistory,
-        receivedSkillSet,
-        receivedSkillMessage,
-      } = await handleResumeData(user.email)
-      setEducationHistory(receivedEducationHistory)
-      setWorkHistory(receivedWorkHistory)
-      setSkillMessage(receivedSkillMessage)
-      setSkillSet(receivedSkillSet)
+      const handledResumeData = await handleResumeData(userId)
+      if (handledResumeData) {
+        setEducationHistory(handledResumeData.receivedEducationHistory)
+        setWorkHistory(handledResumeData.receivedWorkHistory)
+        setSkillMessage(handledResumeData.receivedSkillMessage)
+        setSkillSet(handledResumeData.receivedSkillSet)
+        return Promise.resolve()
+      }
+      return Promise.resolve()
     }
     handleStatusChange()
-  }, [user.email])
+  }, [userId])
 
   return (
     <section id="resume">
-      <div className="row education">
-        <div className="three column header-col">
-          <h1>
-            <span>Education</span>
-          </h1>
-        </div>
-        {educationHistory ? (
-          <div className="nine columns main-col">
-            <div className="row item">
-              <div className="twelve columns">
-                {educationHistory.map(education => {
-                  return (
-                    <div key={education.school}>
-                      <h3>{education.school}</h3>
-                      <p className="info">
-                        {education.degree} <span>&bull;</span>
-                        <em className="date">{education.graduated.year}</em>
-                        {education.graduated.month ? (
-                          <>
-                            <span>&bull;</span>
-                            <em className="month">
-                              {capitalizeFirstLetter(education.graduated.month)}
-                            </em>
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </p>
-                      <p>{education.description}</p>
-                    </div>
-                  )
-                })}
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="row education">
+          <div className="three column header-col">
+            <h1>
+              <span>Education</span>
+            </h1>
+          </div>
+          {educationHistory ? (
+            <div className="nine columns main-col">
+              <div className="row item">
+                <div className="twelve columns">
+                  {educationHistory.map(education => {
+                    return (
+                      <div key={education.school}>
+                        <h3>{education.school}</h3>
+                        <p className="info">
+                          {education.degree} <span>&bull;</span>
+                          <em className="date">{education.graduated.year}</em>
+                          {education.graduated.month ? (
+                            <>
+                              <span>&bull;</span>
+                              <em className="month">
+                                {capitalizeFirstLetter(education.graduated.month)}
+                              </em>
+                            </>
+                          ) : (
+                            <></>
+                          )}
+                        </p>
+                        <p>{education.description}</p>
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
             </div>
+          ) : (
+            <></>
+          )}
+        </div>
+        <div className="row work">
+          <div className="three columns header-col">
+            <h1>
+              <span>Work</span>
+            </h1>
           </div>
-        ) : (
-          <></>
-        )}
-      </div>
-      <div className="row work">
-        <div className="three columns header-col">
-          <h1>
-            <span>Work</span>
-          </h1>
-        </div>
-        <div className="nine columns main-col">
-          {workHistory?.map(work => {
-            return (
-              <div key={work.company}>
-                <h3>{work.company}</h3>
-                <p className="info">
-                  {work.title}
-                  <span>&bull;</span> <em className="date">{work.years}</em>
-                </p>
-                <p>{work.description}</p>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      <div className="row skill">
-        <div className="three columns header-col">
-          <h1>
-            <span>Skills</span>
-          </h1>
-        </div>
-
-        <div className="nine columns main-col">
-          <p>{skillMessage}</p>
-
-          <div className="bars">
-            <ul className="skills">
-              {skillSet?.map(skills => {
-                const className = `bar-expand ${skills.name.toLowerCase()}`
-                return (
-                  <li key={skills.name}>
-                    <span style={{ width: skills.level }} className={className} />
-                    <em>{skills.name}</em>
-                  </li>
-                )
-              })}
-            </ul>
+          <div className="nine columns main-col">
+            {workHistory?.map(work => {
+              return (
+                <div key={work.company}>
+                  <h3>{work.company}</h3>
+                  <p className="info">
+                    {work.title}
+                    <span>&bull;</span> <em className="date">{work.years}</em>
+                  </p>
+                  <p>{work.description}</p>
+                </div>
+              )
+            })}
           </div>
         </div>
-      </div>
+
+        <div className="row skill">
+          <div className="three columns header-col">
+            <h1>
+              <span>Skills</span>
+            </h1>
+          </div>
+
+          <div className="nine columns main-col">
+            <p>{skillMessage}</p>
+
+            <div className="bars">
+              <ul className="skills">
+                {skillSet?.map(skills => {
+                  const className = `bar-expand ${skills.name.toLowerCase()}`
+                  return (
+                    <li key={skills.name}>
+                      <span style={{ width: skills.level }} className={className} />
+                      <em>{skills.name}</em>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Suspense>
     </section>
   )
 }

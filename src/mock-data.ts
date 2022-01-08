@@ -1,6 +1,27 @@
-import { MainDataFields, ResumeDataFields, SocialDataFields } from './common'
+import {
+  MainDataFields,
+  ResumeDataFields,
+  SocialDataFields,
+  UserBasicData,
+  UserDataFields,
+} from './common'
 
-export const getUserMainData = async (emailAddress: string): Promise<MainDataFields> => {
+const usersMockData: UserBasicData[] = [
+  {
+    email: 'jussi@jussi.com',
+    userId: 'user-1234',
+  },
+  {
+    email: 'jussi@jussi2.com',
+    userId: 'user-1235',
+  },
+  {
+    email: 'jussi@jussi3.com',
+    userId: 'user-1236',
+  },
+]
+
+export const getUserIdData = async (emailAddress: string): Promise<MainDataFields> => {
   setTimeout(() => '', 1000)
   return {
     response: {
@@ -8,12 +29,31 @@ export const getUserMainData = async (emailAddress: string): Promise<MainDataFie
       errorMessage: null,
     },
     user: {
+      userId: emailAddress,
       email: emailAddress,
+    },
+  }
+}
+
+export const getUserFromDb = async (emailAddress: string): Promise<UserBasicData | null> => {
+  setTimeout(() => '', 3000)
+  return usersMockData.find(user => user.email === emailAddress) || null
+}
+export const getUserBioData = async (userId: string): Promise<UserDataFields> => {
+  setTimeout(() => '', 1000)
+  return {
+    response: {
+      httpCode: 200,
+      errorMessage: null,
+    },
+    user: {
+      userId,
+      email: 'jussi@jussi.com',
       name: 'Jussi',
       occupation: 'Full-stack developer',
       description:
         'My developer description. Use this to describe what you do or whatever you feel best describes yourself to a potential employer.',
-      image: 'profilepic.jpg',
+      image: '../kuva.jpg',
       bio: "Techs I like and what I'm comfortable ",
       contactmessage: 'How you should contact me',
       address: {
@@ -33,6 +73,7 @@ export const getUserSocialMediaData = async (userId: string): Promise<SocialData
       httpCode: 200,
       errorMessage: null,
     },
+    userId,
     social: [
       {
         socialMediaId: `${userId}-facebook`,
@@ -75,6 +116,7 @@ export const getResumeData = async (userId: string): Promise<ResumeDataFields> =
       httpCode: 200,
       errorMessage: null,
     },
+    userId,
     resume: {
       resumeId: `${userId}-resume`,
       skillmessage: 'Create a short write-up of skills to show off to employers',
