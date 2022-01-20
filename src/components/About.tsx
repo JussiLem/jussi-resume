@@ -1,6 +1,16 @@
 import { SyntheticEvent, useEffect, useState } from 'react'
+import { isLeft, isRight } from 'fp-ts/es6/Either'
 import { getUserBioData } from '../mock-data'
+import { parseUser } from '../common'
 
+export const handleAboutData = async (userId: string) => {
+  try {
+    const bioData = await getUserBioData(userId)
+    return parseUser(JSON.parse(bioData))
+  } catch (e) {
+    throw Error(e)
+  }
+}
 interface AboutProps {
   userId: string
 }
@@ -16,17 +26,16 @@ const About = ({ userId }: AboutProps) => {
   const [resumedownload, setResumeDownload] = useState<string | null>(null)
   useEffect(() => {
     const handleStatusChange = async () => {
-      const bioData = await getUserBioData(userId)
-      if (bioData) {
-        const receivedImage = bioData.user.image || null
-        const receivedBio = bioData.user.bio || null
-        const receivedCity = bioData.user.address?.city || null
-        const receivedName = bioData.user.name || null
-        const receivedCountry = bioData.user.address?.country || null
-        const receivedPhone = bioData.user.phone || null
-        const receivedEmail = bioData.user.email || null
-        const resumedownloadLink = bioData.user.resumedownload || null
-        console.log(receivedImage)
+      const bioData = await handleAboutData(userId)
+      if (isRight(bioData)) {
+        const receivedImage = bioData.right.image || null
+        const receivedBio = bioData.right.bio || null
+        const receivedCity = bioData.right.address?.city || null
+        const receivedName = bioData.right.name || null
+        const receivedCountry = bioData.right.address?.country || null
+        const receivedPhone = bioData.right.phone || null
+        const receivedEmail = bioData.right.email || null
+        const resumedownloadLink = bioData.right.resumedownload || null
         setImage(receivedImage)
         setBio(receivedBio)
         setCity(receivedCity)
@@ -35,9 +44,10 @@ const About = ({ userId }: AboutProps) => {
         setPhone(receivedPhone)
         setEmail(receivedEmail)
         setResumeDownload(resumedownloadLink)
-        return Promise.resolve()
       }
-      return Promise.resolve()
+      if (isLeft(bioData)) {
+        bioData.left.map(errors => errors.message)
+      }
     }
     handleStatusChange()
   }, [userId])

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { isRight } from 'fp-ts/es6/Either'
 import SocialMedia from './SocialMedia'
-import { getUserBioData } from '../mock-data'
+import { handleAboutData } from './About'
 
 interface BannerProps {
   userId: string
@@ -13,12 +14,12 @@ const Banner = ({ userId }: BannerProps) => {
   const [name, setName] = useState<string | null>(null)
   useEffect(() => {
     const handleStatusChange = async () => {
-      const bioData = await getUserBioData(userId)
-      if (bioData) {
-        const receivedOccupation = bioData.user.occupation || null
-        const receivedDescription = bioData.user.description || null
-        const receivedCity = bioData.user.address?.city || null
-        const receivedName = bioData.user.name || null
+      const bioData = await handleAboutData(userId)
+      if (isRight(bioData)) {
+        const receivedOccupation = bioData.right.occupation || null
+        const receivedDescription = bioData.right.description || null
+        const receivedCity = bioData.right.address?.city || null
+        const receivedName = bioData.right.name || null
         setOccupation(receivedOccupation)
         setDescription(receivedDescription)
         setCity(receivedCity)

@@ -1,70 +1,107 @@
-import { IconName } from '@fortawesome/free-brands-svg-icons'
+import { pipe } from 'fp-ts/lib/function'
+import * as t from 'io-ts'
+import { Left, Right } from 'fp-ts/es6/Either'
+import { Errors } from 'io-ts/es6'
 
 export interface ResponseDetails {
   httpCode: number
   errorMessage: string | null
 }
 
-export interface SocialMediaUserMapper {
-  userId: string
-  socialMediaId: string
-}
-export interface SocialFields {
-  socialMediaId: string
-  name: string
-  url: string
-  className: IconName
-}
+const SocialMediaField = pipe(
+  t.type({
+    socialMediaId: t.union([t.string, t.null]),
+    name: t.union([t.string, t.null]),
+    url: t.union([t.string, t.null]),
+    className: t.union([t.string, t.null]),
+  }),
+)
 
-export interface SocialDataFields {
-  social: SocialFields[]
-  userId: string
-  response: ResponseDetails
-}
+const SocialMedias = pipe(
+  t.type({
+    social: t.array(SocialMediaField),
+  }),
+)
+export type SocialMediaData = t.TypeOf<typeof SocialMediaField>
+export type SocialMediasData = t.TypeOf<typeof SocialMedias>
 
-interface AddressFields {
-  city: string
-  country: string
-}
+export const parseSocialMedia: (input: unknown) => Left<Errors> | Right<SocialMediaData> = (
+  input: unknown,
+) => SocialMediaField.decode(input)
 
-export interface UserFields {
-  userId: string
-  email?: string
-  name?: string
-  occupation?: string
-  description?: string
-  image?: string
-  bio?: string
-  contactmessage?: string
-  address?: AddressFields
-  website?: string
-  resumedownload?: string
-  phone?: string
-}
+export const parseSocialMedias: (input: unknown) => Left<Errors> | Right<SocialMediasData> = (
+  input: unknown,
+) => SocialMedias.decode(input)
+
+const AddressFieldParameters = t.type({
+  city: t.string,
+  country: t.string,
+})
+
+const UserFieldParameters = pipe(
+  t.intersection([
+    t.type({
+      name: t.string,
+    }),
+    t.partial({
+      occupation: t.union([t.string, t.null]),
+      email: t.union([t.string, t.null]),
+      description: t.union([t.string, t.null]),
+      image: t.union([t.string, t.null]),
+      bio: t.union([t.string, t.null]),
+      contactmessage: t.union([t.string, t.null]),
+      resumedownload: t.union([t.string, t.null]),
+      phone: t.union([t.string, t.null]),
+      address: t.union([AddressFieldParameters, t.null]),
+    }),
+  ]),
+)
+
+export type User = t.TypeOf<typeof UserFieldParameters>
+
+export const parseUser: (input: unknown) => Left<Errors> | Right<User> = (input: unknown) =>
+  UserFieldParameters.decode(input)
 
 export interface UserBasicData {
   email: string
   userId: string
 }
 
-export interface UserDataFields {
-  user: UserFields
-  response: ResponseDetails
-}
+const UserBasicParameters = t.type({
+  email: t.string,
+  userId: t.string,
+})
+
 export interface MainDataFields {
   user: UserBasicData | null
   response: ResponseDetails
 }
 
-export interface EducationFields {
-  school: string
-  degree: string
-  graduated: {
-    year: number
-    month?: string
-  }
-  description?: string
-}
+const GraduateParameters = pipe(
+  t.intersection([
+    t.type({
+      year: t.number,
+    }),
+    t.partial({
+      month: t.string,
+    }),
+  ]),
+)
+
+export const EducationParameters = pipe(
+  t.intersection([
+    t.type({
+      school: t.string,
+      degree: t.string,
+      graduated: GraduateParameters,
+    }),
+    t.partial({
+      description: t.string,
+    }),
+  ]),
+)
+
+export type Education = t.TypeOf<typeof EducationParameters>
 
 export interface WorkFields {
   company: string
@@ -73,32 +110,49 @@ export interface WorkFields {
   description: string
 }
 
+const WorkParameters = pipe(
+  t.type({
+    company: t.string,
+    title: t.string,
+    years: t.string,
+    description: t.string,
+  }),
+)
+
 export interface SkillSetFields {
   name: string
   level: string
 }
 
-interface CertificationFields {
-  name: string
-  date: string
-}
+const SkillParameters = pipe(
+  t.type({
+    name: t.string,
+    level: t.string,
+  }),
+)
 
-export interface ResumeUserMapper {
-  userId: string
-  resumeId: string
-}
+const CertificationParameters = t.type({
+  name: t.string,
+  date: t.string,
+})
 
-export interface ResumeFields {
-  resumeId?: string
-  skillmessage?: string
-  educationHistory?: EducationFields[]
-  workHistory?: WorkFields[]
-  skillSet?: SkillSetFields[]
-  certifications?: CertificationFields[]
-}
+const ResumeParameters = pipe(
+  t.intersection([
+    t.type({
+      resumeId: t.string,
+    }),
+    t.partial({
+      skillmessage: t.string,
+      educationHistory: t.array(EducationParameters),
+      workHistory: t.array(WorkParameters),
+      skillSet: t.array(SkillParameters),
+      certifications: t.array(CertificationParameters),
+    }),
+  ]),
+)
 
-export interface ResumeDataFields {
-  resume: ResumeFields
-  userId: string
-  response: ResponseDetails
+export type Resume = t.TypeOf<typeof ResumeParameters>
+
+export const parseResume: (input: unknown) => Left<Errors> | Right<Resume> = (input: unknown) => {
+  return ResumeParameters.decode(input)
 }

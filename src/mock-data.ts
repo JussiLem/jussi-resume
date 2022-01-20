@@ -1,10 +1,4 @@
-import {
-  MainDataFields,
-  ResumeDataFields,
-  SocialDataFields,
-  UserBasicData,
-  UserDataFields,
-} from './common'
+import { MainDataFields, UserBasicData } from './common'
 
 const usersMockData: UserBasicData[] = [
   {
@@ -39,16 +33,11 @@ export const getUserFromDb = async (emailAddress: string): Promise<UserBasicData
   setTimeout(() => '', 3000)
   return usersMockData.find(user => user.email === emailAddress) || null
 }
-export const getUserBioData = async (userId: string): Promise<UserDataFields> => {
+export const getUserBioData = async (userId: string): Promise<string> => {
   setTimeout(() => '', 1000)
-  return {
-    response: {
-      httpCode: 200,
-      errorMessage: null,
-    },
+  return JSON.stringify({
     user: {
-      userId,
-      email: 'jussi@jussi.com',
+      bioId: userId,
       name: 'Jussi',
       occupation: 'Full-stack developer',
       description:
@@ -63,17 +52,12 @@ export const getUserBioData = async (userId: string): Promise<UserDataFields> =>
       website: 'https://jussilemmetyinen.me',
       resumedownload: 'https://jussilemmetyinen.me',
     },
-  }
+  })
 }
 
-export const getUserSocialMediaData = async (userId: string): Promise<SocialDataFields> => {
+export const getUserSocialMediaData = async (userId: string): Promise<string> => {
   setTimeout(() => '', 1000)
-  return {
-    response: {
-      httpCode: 200,
-      errorMessage: null,
-    },
-    userId,
+  return JSON.stringify({
     social: [
       {
         socialMediaId: `${userId}-facebook`,
@@ -106,17 +90,12 @@ export const getUserSocialMediaData = async (userId: string): Promise<SocialData
         className: 'github',
       },
     ],
-  }
+  })
 }
 
-export const getResumeData = async (userId: string): Promise<ResumeDataFields> => {
+export const getResumeData = async (userId: string): Promise<string> => {
   setTimeout(() => '', 1000)
-  return {
-    response: {
-      httpCode: 200,
-      errorMessage: null,
-    },
-    userId,
+  return JSON.stringify({
     resume: {
       resumeId: `${userId}-resume`,
       skillmessage: 'Create a short write-up of skills to show off to employers',
@@ -200,5 +179,5 @@ export const getResumeData = async (userId: string): Promise<ResumeDataFields> =
         },
       ],
     },
-  }
+  })
 }
