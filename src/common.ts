@@ -38,14 +38,14 @@ const AddressFieldParameters = t.type({
   country: t.string,
 })
 
-const UserFieldParameters = pipe(
+const UserBioParameters = pipe(
   t.intersection([
     t.type({
+      bioId: t.string,
       name: t.string,
     }),
     t.partial({
       occupation: t.union([t.string, t.null]),
-      email: t.union([t.string, t.null]),
       description: t.union([t.string, t.null]),
       image: t.union([t.string, t.null]),
       bio: t.union([t.string, t.null]),
@@ -57,25 +57,24 @@ const UserFieldParameters = pipe(
   ]),
 )
 
-export type User = t.TypeOf<typeof UserFieldParameters>
+export type UserBioData = t.TypeOf<typeof UserBioParameters>
 
-export const parseUser: (input: unknown) => Left<Errors> | Right<User> = (input: unknown) =>
-  UserFieldParameters.decode(input)
+export const parseUserBioData: (input: unknown) => Left<Errors> | Right<UserBioData> = (
+  input: unknown,
+) => UserBioParameters.decode(input)
 
-export interface UserBasicData {
-  email: string
-  userId: string
-}
+const UserBasicParameters = pipe(
+  t.type({
+    email: t.string,
+    userId: t.string,
+  }),
+)
 
-const UserBasicParameters = t.type({
-  email: t.string,
-  userId: t.string,
-})
+export type UserBasicData = t.TypeOf<typeof UserBasicParameters>
 
-export interface MainDataFields {
-  user: UserBasicData | null
-  response: ResponseDetails
-}
+export const parseUserBasicData: (input: unknown) => Left<Errors> | Right<UserBasicData> = (
+  input: unknown,
+) => UserBasicParameters.decode(input)
 
 const GraduateParameters = pipe(
   t.intersection([

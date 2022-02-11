@@ -1,4 +1,4 @@
-import { MainDataFields, UserBasicData } from './common'
+import { UserBasicData } from './common'
 
 const usersMockData: UserBasicData[] = [
   {
@@ -15,43 +15,30 @@ const usersMockData: UserBasicData[] = [
   },
 ]
 
-export const getUserIdData = async (emailAddress: string): Promise<MainDataFields> => {
-  setTimeout(() => '', 1000)
-  return {
-    response: {
-      httpCode: 200,
-      errorMessage: null,
-    },
-    user: {
-      userId: emailAddress,
-      email: emailAddress,
-    },
-  }
+export const getUserFromDb = async (emailAddress: string): Promise<string> => {
+  setTimeout(() => '', 3000)
+  const user = usersMockData.find(user => user.email === emailAddress)
+  return JSON.stringify(user)
 }
 
-export const getUserFromDb = async (emailAddress: string): Promise<UserBasicData | null> => {
-  setTimeout(() => '', 3000)
-  return usersMockData.find(user => user.email === emailAddress) || null
-}
 export const getUserBioData = async (userId: string): Promise<string> => {
   setTimeout(() => '', 1000)
   return JSON.stringify({
-    user: {
-      bioId: userId,
-      name: 'Jussi',
-      occupation: 'Full-stack developer',
-      description:
-        'My developer description. Use this to describe what you do or whatever you feel best describes yourself to a potential employer.',
-      image: '../kuva.jpg',
-      bio: "Techs I like and what I'm comfortable ",
-      contactmessage: 'How you should contact me',
-      address: {
-        city: 'Helsinki',
-        country: 'Finland',
-      },
-      website: 'https://jussilemmetyinen.me',
-      resumedownload: 'https://jussilemmetyinen.me',
+    bioId: userId,
+    name: 'Jussi',
+    occupation: 'Full-stack developer',
+    description:
+      'My developer description. Use this to describe what you do or whatever you feel best describes yourself to a potential employer.',
+    image: '../kuva.jpg',
+    bio: "Techs I like and what I'm comfortable ",
+    contactmessage: 'How you should contact me',
+    address: {
+      city: 'Helsinki',
+      country: 'Finland',
     },
+    phone: null,
+    website: 'https://jussilemmetyinen.me',
+    resumedownload: 'https://jussilemmetyinen.me',
   })
 }
 
@@ -96,88 +83,86 @@ export const getUserSocialMediaData = async (userId: string): Promise<string> =>
 export const getResumeData = async (userId: string): Promise<string> => {
   setTimeout(() => '', 1000)
   return JSON.stringify({
-    resume: {
-      resumeId: `${userId}-resume`,
-      skillmessage: 'Create a short write-up of skills to show off to employers',
-      educationHistory: [
-        {
-          school: 'Beer University',
-          degree: 'Masters in Beer tasting',
-          graduated: {
-            year: 2014,
-          },
-          description:
-            'Describe your experience at school, what you learned, what useful skills you have acquired etc.',
+    resumeId: `${userId}-resume`,
+    skillmessage: 'Create a short write-up of skills to show off to employers',
+    educationHistory: [
+      {
+        school: 'Beer University',
+        degree: 'Masters in Beer tasting',
+        graduated: {
+          year: 2014,
         },
-        {
-          school: 'Haaga-Helia University',
-          degree: 'haaga-helia bachelor thingy',
-          graduated: {
-            year: 2021,
-            month: 'April',
-          },
-          description:
-            'Describe your experience at school, what you learned, what useful skills you have acquired etc.',
+        description:
+          'Describe your experience at school, what you learned, what useful skills you have acquired etc.',
+      },
+      {
+        school: 'Haaga-Helia University',
+        degree: 'haaga-helia bachelor thingy',
+        graduated: {
+          year: 2021,
+          month: 'April',
         },
-        {
-          school: 'High School',
-          degree: 'School degree',
-          graduated: {
-            year: 2018,
-          },
-          description: 'Lots of high schooling',
+        description:
+          'Describe your experience at school, what you learned, what useful skills you have acquired etc.',
+      },
+      {
+        school: 'High School',
+        degree: 'School degree',
+        graduated: {
+          year: 2018,
         },
-      ],
-      workHistory: [
-        {
-          company: 'Siili',
-          title: 'Consultant',
-          years: 'August 2019 - Present',
-          description: 'Hello',
-        },
-        {
-          company: 'Svea Ekonomi',
-          title: 'Software Developer',
-          years: 'April 2018 - June 2019',
-          description: 'Developed some Java stuff.',
-        },
-      ],
-      skillSet: [
-        {
-          name: 'Git',
-          level: '90%',
-        },
-        {
-          name: 'React',
-          level: '75%',
-        },
-        {
-          name: 'AWS',
-          level: '95%',
-        },
-        {
-          name: 'TypeScript',
-          level: '93%',
-        },
-        {
-          name: 'Java',
-          level: '85%',
-        },
-      ],
-      certifications: [
-        {
-          name: 'AWS Associate Architect',
-          date: '08/2020',
-        },
-        {
-          name: 'AWS Associate SysOps',
-          date: '05/2021',
-        },
-        {
-          name: 'AWS associate Developer',
-          date: '08/2021',
-        },
-      ],
-    },
+        description: 'Lots of high schooling',
+      },
+    ],
+    workHistory: [
+      {
+        company: 'Siili',
+        title: 'Consultant',
+        years: 'August 2019 - Present',
+        description: 'Hello',
+      },
+      {
+        company: 'Svea Ekonomi',
+        title: 'Software Developer',
+        years: 'April 2018 - June 2019',
+        description: 'Developed some Java stuff.',
+      },
+    ],
+    skillSet: [
+      {
+        name: 'Git',
+        level: '90%',
+      },
+      {
+        name: 'React',
+        level: '75%',
+      },
+      {
+        name: 'AWS',
+        level: '95%',
+      },
+      {
+        name: 'TypeScript',
+        level: '93%',
+      },
+      {
+        name: 'Java',
+        level: '85%',
+      },
+    ],
+    certifications: [
+      {
+        name: 'AWS Associate Architect',
+        date: '08/2020',
+      },
+      {
+        name: 'AWS Associate SysOps',
+        date: '05/2021',
+      },
+      {
+        name: 'AWS associate Developer',
+        date: '08/2021',
+      },
+    ],
   })
 }

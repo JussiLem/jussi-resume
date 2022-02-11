@@ -20,7 +20,7 @@ interface SocialMediaProps {
 }
 const SocialMedia = ({ userId }: SocialMediaProps) => {
   const [socialMedias, setSocialMedias] = useState<SocialMediasData | null>(null)
-  const [errors, setErrors] = useState<Error>()
+  const [errors, setErrors] = useState<string>()
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>()
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const SocialMedia = ({ userId }: SocialMediaProps) => {
           setValidationErrors(socialMediaData.left)
         }
       } catch (e) {
-        setErrors(errors)
+        setErrors(`Error happened: ${e}`)
       }
     }
     handleStatusChange()
@@ -43,7 +43,7 @@ const SocialMedia = ({ userId }: SocialMediaProps) => {
   if (errors) {
     return (
       <ul className="social">
-        <div>{errors.message}</div>
+        <div>{errors}</div>
       </ul>
     )
   }

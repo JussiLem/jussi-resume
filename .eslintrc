@@ -46,7 +46,7 @@
         "no-underscore-dangle": "off",
         "no-shadow": "off",
         "eqeqeq": "error",
-        "no-console": 0,
+        "no-console": 1,
         "import/extensions":[
             "error",
             "ignorePackages",

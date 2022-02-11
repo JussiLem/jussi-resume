@@ -1,52 +1,66 @@
 import { SyntheticEvent, useEffect, useState } from 'react'
 import { isLeft, isRight } from 'fp-ts/es6/Either'
+import { ValidationError } from 'io-ts/es6'
 import { getUserBioData } from '../mock-data'
-import { parseUser } from '../common'
+import { parseUserBioData, UserBioData } from '../common'
 
 export const handleAboutData = async (userId: string) => {
   try {
-    const bioData = await getUserBioData(userId)
-    return parseUser(JSON.parse(bioData))
-  } catch (e) {
-    throw Error(e)
+    const raw = await getUserBioData(userId)
+    const parsed = JSON.parse(raw)
+    return parseUserBioData(parsed)
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      throw Error(`Failed to parse user: ${e.message}`)
+    }
+    throw Error('Unknown error')
   }
 }
 interface AboutProps {
   userId: string
+  email: string
 }
 
-const About = ({ userId }: AboutProps) => {
+const About = ({ userId, email }: AboutProps) => {
   const [image, setImage] = useState<string | null>(null)
   const [bio, setBio] = useState<string | null>(null)
   const [city, setCity] = useState<string | null>(null)
   const [country, setCountry] = useState<string | null>(null)
   const [name, setName] = useState<string | null>(null)
   const [phone, setPhone] = useState<string | null>(null)
-  const [email, setEmail] = useState<string | null>(null)
   const [resumedownload, setResumeDownload] = useState<string | null>(null)
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>()
+  const [errors, setErrors] = useState<string | null>()
+
+  const setBioData = (user: UserBioData) => {
+    const receivedImage = user.image || null
+    const receivedBio = user.bio || null
+    const receivedCity = user.address?.city || null
+    const receivedName = user.name || null
+    const receivedCountry = user.address?.country || null
+    const receivedPhone = user.phone || null
+    const resumedownloadLink = user.resumedownload || null
+    setImage(receivedImage)
+    setBio(receivedBio)
+    setCity(receivedCity)
+    setName(receivedName)
+    setCountry(receivedCountry)
+    setPhone(receivedPhone)
+    setResumeDownload(resumedownloadLink)
+  }
+
   useEffect(() => {
     const handleStatusChange = async () => {
-      const bioData = await handleAboutData(userId)
-      if (isRight(bioData)) {
-        const receivedImage = bioData.right.image || null
-        const receivedBio = bioData.right.bio || null
-        const receivedCity = bioData.right.address?.city || null
-        const receivedName = bioData.right.name || null
-        const receivedCountry = bioData.right.address?.country || null
-        const receivedPhone = bioData.right.phone || null
-        const receivedEmail = bioData.right.email || null
-        const resumedownloadLink = bioData.right.resumedownload || null
-        setImage(receivedImage)
-        setBio(receivedBio)
-        setCity(receivedCity)
-        setName(receivedName)
-        setCountry(receivedCountry)
-        setPhone(receivedPhone)
-        setEmail(receivedEmail)
-        setResumeDownload(resumedownloadLink)
-      }
-      if (isLeft(bioData)) {
-        bioData.left.map(errors => errors.message)
+      try {
+        const bioData = await handleAboutData(userId)
+        if (isRight(bioData)) {
+          setBioData(bioData.right)
+        }
+        if (isLeft(bioData)) {
+          setValidationErrors(bioData.left)
+        }
+      } catch (err: unknown) {
+        setErrors(`not working: ${err}`)
       }
     }
     handleStatusChange()
@@ -55,6 +69,25 @@ const About = ({ userId }: AboutProps) => {
   const imageOnErrorHandler = (event: SyntheticEvent<HTMLImageElement, Event>) => {
     event.currentTarget.src = ''
     event.currentTarget.className = 'error'
+  }
+  if (errors) {
+    return (
+      <section id="about">
+        <div>{errors}</div>
+      </section>
+    )
+  }
+  if (validationErrors && validationErrors?.length > 0) {
+    return (
+      <section id="about">
+        <ul className="social">
+          {validationErrors.map(err => {
+            console.log(err)
+            return <li key={err.message}>{err.message}</li>
+          })}
+        </ul>
+      </section>
+    )
   }
 
   return (
